@@ -28,7 +28,7 @@ tailwind.config = {
                 }
             },
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
+                sans: ['Century Gothic', 'CenturyGothic', 'AppleGothic', 'sans-serif'], 
             },
         }
     }
