@@ -1,0 +1,39 @@
+/* css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    /* Default dark mode text color set via Tailwind class on body */
+}
+
+/* Gradient remains largely the same - text on it is already light */
+.gradient-bg {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+}
+
+/* Hero pattern might need adjustment if too subtle/bright on dark */
+.hero-pattern {
+    background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 50%); /* Reduced opacity */
+}
+
+/* Card hover effect - shadow might need tweaking for dark */
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1); /* Darker shadow */
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Add specific dark mode input placeholder color if needed */
+/* input::placeholder, textarea::placeholder {
+    color: #9ca3af; // Or your chosen placeholder color
+} */
