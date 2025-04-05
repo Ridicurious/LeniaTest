@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif; 
     scroll-behavior: smooth;
     /* Default dark mode text color set via Tailwind class on body */
 }
