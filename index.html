@@ -3,285 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lenia Universe | Cellular Automata</title>
+    <title>NexusAI | AI-Powered Scientific Insights</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        dark: '#0f172a',
+                        accent: '#10b981',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         body {
-            overflow-x: hidden;
             font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
         
-        #leniaCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3;
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
         }
         
-        .gradient-text {
-            background: linear-gradient(90deg, #4f46e5, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .hero-pattern {
+            background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
-        .pulse {
-            animation: pulse 2s infinite;
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
         }
         
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        
-        .lenia-cell {
-            position: absolute;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 0.3s ease;
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
-    <canvas id="leniaCanvas"></canvas>
-    
-    <div class="container mx-auto px-4 py-16 min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="flex justify-between items-center py-6">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 mr-3"></div>
-                <span class="text-xl font-bold gradient-text">LENIA</span>
+<body class="bg-gray-50 text-dark">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-atom text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">Nexus<span class="text-primary">AI</span></span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#features" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">Features</a>
+                    <a href="#solutions" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">Solutions</a>
+                    <a href="#pricing" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">Pricing</a>
+                    <a href="#about" class="text-gray-500 hover:text-primary px-3 py-2 text-sm font-medium">About</a>
+                </div>
+                <div class="flex items-center">
+                    <a href="#contact" class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">Get Started</a>
+                </div>
             </div>
-            <nav class="hidden md:block">
-                <ul class="flex space-x-8">
-                    <li><a href="#" class="hover:text-purple-400 transition">Home</a></li>
-                    <li><a href="#" class="hover:text-purple-400 transition">Explore</a></li>
-                    <li><a href="#" class="hover:text-purple-400 transition">Research</a></li>
-                    <li><a href="#" class="hover:text-purple-400 transition">About</a></li>
-                </ul>
-            </nav>
-            <button class="md:hidden">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-        </header>
-        
-        <!-- Hero Section -->
-        <main class="flex-grow flex flex-col justify-center items-center text-center py-20">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text">
-                Discover the <span class="underline decoration-purple-500">Lenia</span> Universe
-            </h1>
-            <p class="text-xl md:text-2xl max-w-3xl mb-12 text-gray-300">
-                A continuous cellular automata world where artificial life forms emerge from simple mathematical rules.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <button class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full font-bold text-lg hover:opacity-90 transition pulse">
-                    Explore Patterns
-                </button>
-                <button class="px-8 py-4 glass-card rounded-full font-bold text-lg hover:bg-white hover:bg-opacity-10 transition">
-                    Learn More
-                </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white pt-32 pb-20 hero-pattern">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Unlock the Future of <span class="text-accent">Scientific Discovery</span></h1>
+                    <p class="text-lg text-gray-100 mb-8">Our AI-powered platform delivers cutting-edge insights, accelerating research and technological innovation across industries.</p>
+                    <div class="flex space-x-4">
+                        <a href="#contact" class="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-md font-medium transition duration-300">Request Demo</a>
+                        <a href="#features" class="border border-white text-white hover:bg-white hover:text-primary px-6 py-3 rounded-md font-medium transition duration-300">Learn More</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -top-10 -left-10 w-32 h-32 bg-accent rounded-full opacity-20 animate-float"></div>
+                        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-white rounded-full opacity-20 animate-float" style="animation-delay: 2s;"></div>
+                        <div class="relative bg-white rounded-xl shadow-2xl overflow-hidden">
+                            <div class="bg-gray-800 p-3 flex items-center">
+                                <div class="flex space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                </div>
+                                <div class="text-xs text-gray-400 ml-4">AI Research Dashboard</div>
+                            </div>
+                            <div class="p-6">
+                                <div class="flex mb-4">
+                                    <div class="w-1/3 h-2 bg-gray-200 rounded mr-2"></div>
+                                    <div class="w-1/3 h-2 bg-gray-200 rounded mr-2"></div>
+                                    <div class="w-1/3 h-2 bg-gray-200 rounded"></div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4 mb-4">
+                                    <div class="h-20 bg-blue-50 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-dna text-primary text-2xl"></i>
+                                    </div>
+                                    <div class="h-20 bg-green-50 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-microscope text-accent text-2xl"></i>
+                                    </div>
+                                    <div class="h-20 bg-purple-50 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-robot text-secondary text-2xl"></i>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white mr-3">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium">New Discovery Pattern</div>
+                                            <div class="text-xs text-gray-500">93% confidence match</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-sm text-gray-700">AI has identified a potential breakthrough in quantum computing materials research...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </main>
-        
-        <!-- Features Section -->
-        <section class="py-20">
-            <h2 class="text-3xl font-bold mb-16 text-center gradient-text">Key Features</h2>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="bg-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 mb-8">Trusted by leading organizations worldwide</p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x50?text=MIT" alt="MIT" class="h-10 opacity-60 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x50?text=NASA" alt="NASA" class="h-10 opacity-60 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x50?text=Stanford" alt="Stanford" class="h-10 opacity-60 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x50?text=Novartis" alt="Novartis" class="h-10 opacity-60 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x50?text=Siemens" alt="Siemens" class="h-10 opacity-60 hover:opacity-100 transition duration-300">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Powerful Features for <span class="text-primary">Accelerated Discovery</span></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Our platform combines cutting-edge AI with scientific expertise to deliver unparalleled research capabilities.</p>
+            </div>
+            
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-card p-8 rounded-xl hover:bg-white hover:bg-opacity-10 transition">
-                    <div class="w-16 h-16 rounded-full bg-purple-500 bg-opacity-20 flex items-center justify-center mb-6">
-                        <i class="fas fa-atom text-2xl text-purple-400"></i>
+                <div class="bg-white p-8 rounded-xl shadow-md feature-card transition duration-300">
+                    <div class="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-primary text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Continuous Space</h3>
-                    <p class="text-gray-300">Unlike traditional cellular automata, Lenia operates in continuous space with smooth state transitions.</p>
+                    <h3 class="text-xl font-semibold mb-3">Predictive Analysis</h3>
+                    <p class="text-gray-600 mb-4">Our AI models predict research outcomes and identify promising areas for exploration with 92% accuracy.</p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Trend forecasting</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Anomaly detection</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Pattern recognition</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="glass-card p-8 rounded-xl hover:bg-white hover:bg-opacity-10 transition">
-                    <div class="w-16 h-16 rounded-full bg-pink-500 bg-opacity-20 flex items-center justify-center mb-6">
-                        <i class="fas fa-shapes text-2xl text-pink-400"></i>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md feature-card transition duration-300">
+                    <div class="w-14 h-14 bg-green-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-flask text-accent text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Complex Patterns</h3>
-                    <p class="text-gray-300">Discover a variety of self-sustaining patterns that exhibit lifelike behaviors and interactions.</p>
+                    <h3 class="text-xl font-semibold mb-3">Automated Research</h3>
+                    <p class="text-gray-600 mb-4">Process millions of scientific papers in minutes, extracting key findings and relationships.</p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Literature synthesis</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Cross-disciplinary insights</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Knowledge graph generation</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="glass-card p-8 rounded-xl hover:bg-white hover:bg-opacity-10 transition">
-                    <div class="w-16 h-16 rounded-full bg-blue-500 bg-opacity-20 flex items-center justify-center mb-6">
-                        <i class="fas fa-sliders-h text-2xl text-blue-400"></i>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md feature-card transition duration-300">
+                    <div class="w-14 h-14 bg-purple-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-network text-secondary text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Customizable Rules</h3>
-                    <p class="text-gray-300">Experiment with different kernel shapes and growth functions to create your own artificial life forms.</p>
+                    <h3 class="text-xl font-semibold mb-3">Collaborative Platform</h3>
+                    <p class="text-gray-600 mb-4">Connect with researchers worldwide and leverage collective intelligence for breakthrough innovations.</p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Secure data sharing</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Real-time collaboration</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            <span>Expert matching</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </section>
-    </div>
-    
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Industry-Specific <span class="text-primary">Solutions</span></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Tailored AI solutions designed for your specific research needs.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 rounded-xl overflow-hidden flex flex-col md:flex-row">
+                    <div class="md:w-1/3 bg-primary flex items-center justify-center p-6">
+                        <i class="fas fa-heartbeat text-white text-5xl"></i>
+                    </div>
+                    <div class="md:w-2/3 p-8">
+                        <h3 class="text-xl font-semibold mb-3">Healthcare & Life Sciences</h3>
+                        <p class="text-gray-600 mb-4">Accelerate drug discovery, predict disease progression, and personalize treatment plans with our biomedical AI models.</p>
+                        <a href="#" class="text-primary font-medium flex items-center">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl overflow-hidden flex flex-col md:flex-row">
+                    <div class="md:w-1/3 bg-secondary flex items-center justify-center p-6">
+                        <i class="fas fa-industry text-white text-5xl"></i>
+                    </div>
+                    <div class="md:w-2/3 p-8">
+                        <h3 class="text-xl font-semibold mb-3">Materials Science</h3>
+                        <p class="text-gray-600 mb-4">Discover new materials with desired properties 10x faster using our quantum chemistry-informed AI models.</p>
+                        <a href="#" class="text-primary font-medium flex items-center">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl overflow-hidden flex flex-col md:flex-row">
+                    <div class="md:w-1/3 bg-accent flex items-center justify-center p-6">
+                        <i class="fas fa-leaf text-white text-5xl"></i>
+                    </div>
+                    <div class="md:w-2/3 p-8">
+                        <h3 class="text-xl font-semibold mb-3">Energy & Sustainability</h3>
+                        <p class="text-gray-600 mb-4">Optimize renewable energy systems and develop sustainable technologies with our environmental AI solutions.</p>
+                        <a href="#" class="text-primary font-medium flex items-center">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl overflow-hidden flex flex-col md:flex-row">
+                    <div class="md:w-1/3 bg-purple-600 flex items-center justify-center p-6">
+                        <i class="fas fa-quantum-computer text-white text-5xl"></i>
+                    </div>
+                    <div class="md:w-2/3 p-8">
+                        <h3 class="text-xl font-semibold mb-3">Quantum Computing</h3>
+                        <p class="text-gray-600 mb-4">Navigate the quantum frontier with AI-powered simulations and algorithm optimization tools.</p>
+                        <a href="#" class="text-primary font-medium flex items-center">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-4xl font-bold mb-2">10x</div>
+                    <div class="text-gray-200">Faster research cycles</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold mb-2">92%</div>
+                    <div class="text-gray-200">Prediction accuracy</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold mb-2">500+</div>
+                    <div class="text-gray-200">Scientific breakthroughs</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold mb-2">24/7</div>
+                    <div class="text-gray-200">AI research assistant</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">What Our <span class="text-primary">Clients Say</span></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Hear from researchers and innovators who have transformed their work with NexusAI.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-300 overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Dr. Sarah Chen" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Dr. Sarah Chen</h4>
+                            <p class="text-gray-500 text-sm">Biomedical Researcher, Stanford</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"NexusAI helped us identify a novel biomarker for early-stage cancer detection that we had overlooked in our manual analysis. The platform reduced our research time by months."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-300 overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Prof. James Wilson" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Prof. James Wilson</h4>
+                            <p class="text-gray-500 text-sm">Materials Scientist, MIT</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The predictive modeling capabilities of NexusAI enabled us to discover a new class of high-temperature superconductors with properties we wouldn't have thought to investigate."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-300 overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Elena Rodriguez" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Dr. Elena Rodriguez</h4>
+                            <p class="text-gray-500 text-sm">Quantum Physicist, CERN</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The cross-disciplinary insights generated by NexusAI's knowledge graph helped us make connections between quantum field theory and condensed matter physics that led to a major breakthrough."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Simple, Transparent <span class="text-primary">Pricing</span></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Choose the plan that fits your research needs and budget.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="border border-gray-200 rounded-xl p-8 hover:border-primary transition duration-300">
+                    <h3 class="text-xl font-semibold mb-4">Academic</h3>
+                    <div class="text-4xl font-bold mb-6">$99<span class="text-lg text-gray-500">/month</span></div>
+                    <p class="text-gray-600 mb-6">Perfect for individual researchers and small labs.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>10,000 document analyses/month</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Basic predictive models</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Email support</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full bg-gray-100 hover:bg-primary hover:text-white text-center py-3 rounded-md font-medium transition duration-300">Get Started</a>
+                </div>
+                
+                <div class="border-2 border-primary rounded-xl p-8 relative">
+                    <div class="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">POPULAR</div>
+                    <h3 class="text-xl font-semibold mb-4">Enterprise</h3>
+                    <div class="text-4xl font-bold mb-6">$499<span class="text-lg text-gray-500">/month</span></div>
+                    <p class="text-gray-600 mb-6">For research teams and mid-sized organizations.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Unlimited document analyses</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Advanced predictive models</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Custom model training</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Priority support</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full bg-primary hover:bg-secondary text-white text-center py-3 rounded-md font-medium transition duration-300">Get Started</a>
+                </div>
+                
+                <div class="border border-gray-200 rounded-xl p-8 hover:border-primary transition duration-300">
+                    <h3 class="text-xl font-semibold mb-4">Institution</h3>
+                    <div class="text-4xl font-bold mb-6">Custom</div>
+                    <p class="text-gray-600 mb-6">Tailored solutions for universities and large organizations.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Unlimited everything</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>Dedicated AI researchers</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>White-label solutions</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-accent mr-2"></i>
+                            <span>24/7 premium support</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full bg-gray-100 hover:bg-primary hover:text-white text-center py-3 rounded-md font-medium transition duration-300">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h2 class="text-3xl font-bold mb-6">About <span class="text-primary">NexusAI</span></h2>
+                    <p class="text-gray-600 mb-6">Founded in 2018 by a team of AI researchers and scientists from Stanford and MIT, NexusAI was born from the frustration of seeing groundbreaking research buried in silos and the slow pace of scientific discovery.</p>
+                    <p class="text-gray-600 mb-6">Our mission is to accelerate human progress by empowering researchers with AI tools that can process, analyze, and connect scientific information at unprecedented scale and speed.</p>
+                    <p class="text-gray-600 mb-8">Today, our platform is used by over 5,000 researchers across 40 countries, contributing to advancements in medicine, materials science, energy, and beyond.</p>
+                    <a href="#" class="text-primary font-medium flex items-center">
+                        Meet our team <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <div class="md:w-1/2 md:pl-16">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-users text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">50+</h3>
+                            <p class="text-gray-600">World-class AI researchers</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-graduation-cap text-accent text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">15</h3>
+                            <p class="text-gray-600">PhD scientists on staff</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-paper-plane text-secondary text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">100+</h3>
+                            <p class="text-gray-600">Peer-reviewed publications</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="w-12 h-12 bg-yellow-50 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-trophy text-yellow-500 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">12</h3>
+                            <p class="text-gray-600">Industry awards</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-20 gradient-bg text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-6">Ready to Transform Your Research?</h2>
+            <p class="text-xl text-gray-200 mb-10 max-w-2xl mx-auto">Join thousands of researchers accelerating discovery with AI-powered insights.</p>
+            
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-md mx-auto">
+                <div class="p-8">
+                    <form>
+                        <div class="mb-4">
+                            <input type="text" placeholder="Full Name" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-800">
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" placeholder="Email Address" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-800">
+                        </div>
+                        <div class="mb-4">
+                            <input type="text" placeholder="Organization" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-800">
+                        </div>
+                        <div class="mb-6">
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-800">
+                                <option>I'm interested in...</option>
+                                <option>Healthcare & Life Sciences</option>
+                                <option>Materials Science</option>
+                                <option>Energy & Sustainability</option>
+                                <option>Quantum Computing</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white py-3 px-4 rounded-md font-medium transition duration-300">Request Demo</button>
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-8 py-4 text-center">
+                    <p class="text-gray-600 text-sm">Have questions? <a href="#" class="text-primary font-medium">Contact our team</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="glass-card mt-20 py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 mr-2"></div>
-                        <span class="text-lg font-bold gradient-text">LENIA</span>
+    <footer class="bg-dark text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-atom text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">Nexus<span class="text-primary">AI</span></span>
                     </div>
-                    <p class="text-gray-400 mt-2">Exploring the boundaries of artificial life.</p>
+                    <p class="text-gray-400 mb-4">Accelerating scientific discovery through artificial intelligence.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-discord"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">API</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Integrations</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Case Studies</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Research Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Webinars</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-                <p>© 2023 Lenia Universe. All rights reserved.</p>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 NexusAI. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Lenia-inspired animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('leniaCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set canvas to full window size
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-            
-            // Parameters for the animation
-            const cellSize = 20;
-            const cols = Math.ceil(canvas.width / cellSize);
-            const rows = Math.ceil(canvas.height / cellSize);
-            
-            // Create grid
-            let grid = [];
-            for (let i = 0; i < cols; i++) {
-                grid[i] = [];
-                for (let j = 0; j < rows; j++) {
-                    grid[i][j] = Math.random() > 0.9 ? 1 : 0;
-                }
-            }
-            
-            // Kernel for convolution (simplified)
-            const kernel = [
-                [0.05, 0.1, 0.05],
-                [0.1,  0.4, 0.1],
-                [0.05, 0.1, 0.05]
-            ];
-            
-            // Growth function (simplified)
-            function growth(x) {
-                return Math.exp(-4 * Math.pow(x - 0.5, 2));
-            }
-            
-            // Animation loop
-            function animate() {
-                // Create next generation
-                let nextGrid = [];
-                for (let i = 0; i < cols; i++) {
-                    nextGrid[i] = [];
-                    for (let j = 0; j < rows; j++) {
-                        // Convolve with kernel
-                        let sum = 0;
-                        for (let ki = -1; ki <= 1; ki++) {
-                            for (let kj = -1; kj <= 1; kj++) {
-                                const ni = (i + ki + cols) % cols;
-                                const nj = (j + kj + rows) % rows;
-                                sum += grid[ni][nj] * kernel[ki + 1][kj + 1];
-                            }
-                        }
-                        
-                        // Apply growth function
-                        nextGrid[i][j] = growth(sum);
-                    }
-                }
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
                 
-                // Draw the grid
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < cols; i++) {
-                    for (let j = 0; j < rows; j++) {
-                        const value = nextGrid[i][j];
-                        if (value > 0.1) {
-                            const x = i * cellSize;
-                            const y = j * cellSize;
-                            const radius = value * cellSize * 0.8;
-                            
-                            const gradient = ctx.createRadialGradient(
-                                x, y, 0,
-                                x, y, radius
-                            );
-                            gradient.addColorStop(0, `rgba(168, 85, 247, ${value})`);
-                            gradient.addColorStop(1, `rgba(236, 72, 153, ${value * 0.5})`);
-                            
-                            ctx.fillStyle = gradient;
-                            ctx.beginPath();
-                            ctx.arc(x, y, radius, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-                
-                // Update grid
-                grid = nextGrid;
-                
-                requestAnimationFrame(animate);
-            }
-            
-            // Start animation
-            animate();
-            
-            // Add some interactive elements
-            canvas.addEventListener('mousemove', function(e) {
-                // Occasionally add new cells when mouse moves
-                if (Math.random() > 0.95) {
-                    const i = Math.floor(e.clientX / cellSize);
-                    const j = Math.floor(e.clientY / cellSize);
-                    if (i >= 0 && i < cols && j >= 0 && j < rows) {
-                        grid[i][j] = 1;
-                    }
-                }
-            });
-            
-            // Click to add more cells
-            canvas.addEventListener('click', function(e) {
-                const i = Math.floor(e.clientX / cellSize);
-                const j = Math.floor(e.clientY / cellSize);
-                if (i >= 0 && i < cols && j >= 0 && j < rows) {
-                    for (let ki = -2; ki <= 2; ki++) {
-                        for (let kj = -2; kj <= 2; kj++) {
-                            const ni = (i + ki + cols) % cols;
-                            const nj = (j + kj + rows) % rows;
-                            const dist = Math.sqrt(ki * ki + kj * kj);
-                            if (dist <= 2) {
-                                grid[ni][nj] = Math.max(grid[ni][nj], 1 - dist * 0.3);
-                            }
-                        }
-                    }
-                }
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
+        
+        // Simple form submission handler
+        const form = document.querySelector('form');
+        if(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your interest! Our team will contact you shortly.');
+                form.reset();
+            });
+        }
     </script>
 </body>
 </html>
