@@ -24,5 +24,25 @@ if(form) {
     });
 }
 
+// --- Add Logo Insertion Logic ---
+// Ensure this runs after the DOM is ready and logo.js is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const logoContainer = document.getElementById('logo-container');
+    if (logoContainer) {
+      // Call the function from logo.js to create the SVG
+      // Provide desired Tailwind size units (e.g., '8' for h-8/w-8)
+      const logoSvgElement = createLogoSVG('8', '8', ''); // Creates h-8 w-8 SVG
+  
+      // Append the created SVG element to the container
+      if (logoSvgElement) {
+        logoContainer.appendChild(logoSvgElement);
+      } else {
+        console.error("Failed to create logo SVG element.");
+      }
+    } else {
+      console.error("Logo container element not found.");
+    }
+  });
+
 // Optional: Add active state to nav links on scroll
 // (More complex JS, omitted for brevity but consider adding for better UX)
