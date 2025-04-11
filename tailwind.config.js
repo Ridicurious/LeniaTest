@@ -6,7 +6,7 @@ tailwind.config = {
                 // Primary/Accent colors remain the same, adjust if contrast is poor on dark bg
                 primary: '#3b82f6',      // Blue
                 secondary: '#1e40af',    // Darker Blue
-                accent: '#10b981',      // Green
+                accent: '#9B59B6',      // Violet
                 
                 // Dark Theme Palette
                 dark: '#0f172a',        // Very Dark Blue (Main BG)
