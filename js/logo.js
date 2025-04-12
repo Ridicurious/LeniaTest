@@ -9,11 +9,11 @@ function createLogoSVG(width, height, className = '') {
   const combinedClassName = `
     ${widthClass}
     ${heightClass}
-    fill-current text-white       
+    fill-current text-primary       
     transform-gpu               
     transition-all duration-1000 ease-in-out 
     // hover:rotate-180            
-    hover:text-primary          
+    hover:text-white          
     ${className} 
   `.trim().replace(/\s+/g, ' '); // Cleans up extra whitespace
 
